@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" id="form">
+        <input type="text" name="username" value="">
+        <input type="password" name="passward" value="" autocomplete="false">
+        <input type="button" value="提交">
+    </form>
+    <div id="tip"></div>
+</body>
+<script type="javascript" src="./index_1.js"></script>
+<script>
+validator.addRules(form.username,[{
+    rule: 'noEmpty',
+    errMsg: '当前项不能为空'
+},{
+    rule: 'maxLength:9',
+    errMsg: '长度不能大于9'
+}])
+validator.addRules(form.passward,[{
+    rule: 'noEmpty',
+    errMsg: '当前项不能为空'
+},{
+    rule: 'maxLength:9',
+    errMsg: '长度不能大于9'
+}])  
+const form = document.getElementById('form');
+const tip = document.getElementById('tip');
+form.addEventListener('submit',function(){
+    e.preventDefault();
+    const errMsg = validator.execValidate();
+    if(errMsg){
+        tip.innerHTML = errMsg;
+        tip.style.color = 'red';
+    }else {
+        tip.innerHTML = '验证通过！';
+        tip.style.color = 'green';
+    }
+},false);
+
+
+</script>
+</html>
