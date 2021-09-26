@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button>welcome</button>
+    <script src="./单例模式.js"></script>
+    <script>
+      let btn = document.getElementsByTagName("button")[0];
+      btn.addEventListener("click", () => {
+        console.log("btn click");
+        let element = getSingle();
+        element.style.display = "block";
+      });
+    </script>
+  </body>
+</html>
