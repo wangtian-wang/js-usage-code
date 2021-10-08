@@ -29,3 +29,66 @@ if (isFunction(target))
  *
  *
  */
+
+/**
+ *  深拷贝和深克隆一样吗？？
+ * 深拷贝 更改一个对象不影响另外一个对象
+ * 深克隆 ： 只将一个对象的第一级属性复制过来 并且更改新对象的属性值不影响原来对象的的属性值？？
+ *
+ *
+ *
+ */
+// 关于json.stringify 深拷贝的缺点
+/* 
+1 bigint类型的值是无法装换的
+2 如果属性值是 undefined symbol function等类型 会丢失这些属性值对应的属性，当属性名为symbol的时候 会消失这个属性
+3： error regexp这些类型的 属性值对应的属性会变为空对象
+4 对于属性值类型是 data类型的 会将属性值变为字符串 即使再次变为对象 属性值还是字符串
+
+
+*/
+const clone = (target, deep = false, cache = []) => {
+  if (!target) throw new Error("this function needs at least one params");
+  let type = Object.prototype.toString.call(target);
+  let isArray = Array.isArray(target);
+  let isObject = type === "[object Object]";
+  if (!Array.isArray(cache)) {
+    cache = [];
+  }
+  if (cache.includes(target)) return target;
+  cache.push(target);
+  if (!isArray && !isObject) return target;
+  if (target == null) return target; // target = null || target = undefined
+  let ctor = target.constructor;
+  if (type === "[object RegExp]" || type === "[object Date]")
+    return new ctor(target);
+  if (type === "[object Function]")
+    return function (...args) {
+      return target.call(this, args);
+    };
+  if (type === "[object Error]") return new ctor(target.message);
+  let result;
+  if (type === "[object Object]") {
+    result = {};
+    for (key in target) {
+      if (target.hasOwnProperty(key)) {
+        if (deep) {
+          result[key] = clone(target[key], deep, cache);
+        } else {
+          result[key] = target[key];
+        }
+      }
+    }
+    return result;
+  }
+  if (type === "[object Array]") {
+    result = [];
+    target.forEach((item, index) => {
+      if (!deep) {
+        result[index] = item;
+      }
+      result[index] = clone(item, deep, cache);
+    });
+    return result;
+  }
+};
