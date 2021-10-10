@@ -48,7 +48,7 @@ if (isFunction(target))
 
 */
 const clone = (target, deep = false, cache = []) => {
-  if (!target) throw new Error("this function needs at least one params");
+  if (target == null) return target; // target = null || target = undefined
   let type = Object.prototype.toString.call(target);
   let isArray = Array.isArray(target);
   let isObject = type === "[object Object]";
@@ -58,7 +58,6 @@ const clone = (target, deep = false, cache = []) => {
   if (cache.includes(target)) return target;
   cache.push(target);
   if (!isArray && !isObject) return target;
-  if (target == null) return target; // target = null || target = undefined
   let ctor = target.constructor;
   if (type === "[object RegExp]" || type === "[object Date]")
     return new ctor(target);
@@ -73,6 +72,10 @@ const clone = (target, deep = false, cache = []) => {
     for (key in target) {
       if (target.hasOwnProperty(key)) {
         if (deep) {
+          let symbolKey = Object.getOwnPropertySymbols(key);
+          if (symbolKey) {
+            result[symbolKey] = target[symbolKey];
+          }
           result[key] = clone(target[key], deep, cache);
         } else {
           result[key] = target[key];

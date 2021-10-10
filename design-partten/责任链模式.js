@@ -37,8 +37,10 @@ Chain.prototype.passToNextFn = function () {
   let ret = this.fn.apply(this, arguments);
   if (ret === "nextExec") {
     if (this.exector) {
-      this.exector.passToNextFn.apply(this.exector, arguments);
+      return this.exector.passToNextFn.apply(this.exector, arguments);
     }
+  } else {
+    return ret;
   }
 };
 /* 实例化责任对象  */
